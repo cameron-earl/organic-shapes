@@ -1,8 +1,15 @@
 const min = .2;
 const max = .8;
 const stepBase = .001;
-const rotStep = .2;
 const scaleStep = .001;
+const satMin = .6;
+const satMax = 1;
+const lumMin = .3;
+const lumMax = .6;
+const scaleMin = .8;
+const scaleMax = 1;
+const rotAccel = .00001;
+const rotSpeedMax = .2;
 
 const getRandomStartStep = () => randomlyNegative(stepBase * (Math.random() + .5));
 
@@ -10,20 +17,21 @@ class Blob {
 
   constructor(element) {
     this.element = element;
-    this.t = .25;
-    this.b = .25;
-    this.l = .25;
-    this.r = .25;
+    this.t = round(Math.random(), 3);
+    this.b = round(Math.random(), 3);
+    this.l = round(Math.random(), 3);
+    this.r = round(Math.random(), 3);
     this.stepT = getRandomStartStep();
     this.stepB = getRandomStartStep();
     this.stepL = getRandomStartStep();
     this.stepR = getRandomStartStep();
 
     this.hue = Math.floor(Math.random() * 360);
-    this.sat = 1;
-    this.lum = .5;
-    this.rot = 0;
-    this.scale = 0;
+    this.sat = Math.random();
+    this.lum = Math.random();
+    this.rot = Math.random();
+    this.scale = Math.random();
+    this.rotSpeed = Math.random();
   }
 
   tick() {
@@ -51,7 +59,9 @@ class Blob {
   }
 
   stepRot() {
-    this.rot = (this.rot + rotStep) % 360;
+    const rotStep = constrain(percentSin(this.rotSpeed), -rotSpeedMax, rotSpeedMax);
+    this.rot = (this.rot + rotStep + 360) % 360;
+    this.rotSpeed += rotAccel;
   }
 
   stepRads() {
@@ -79,8 +89,8 @@ class Blob {
 
   setColor() {
     const p = percentify;
-    const satPercent = constrain(percentSin(this.sat), .4, 1);
-    const lumPercent = constrain(percentSin(this.lum), .3, .7);
+    const satPercent = constrain(percentSin(this.sat), satMin, satMax);
+    const lumPercent = constrain(percentSin(this.lum), lumMin, lumMax);
     const bgString = `hsl(${p(this.hue)}, ${p(satPercent)}%, ${p(lumPercent)}%)`
     this.element.style.backgroundColor = bgString;
   }
