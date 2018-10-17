@@ -1,0 +1,22 @@
+.shape {
+  width: 20em;
+  height: 20em;
+  border-radius: 50%;
+  background-color: blue;
+}
+
+main {
+  display: flex;
+  justify-content: space-around;
+  height: 100%;
+  margin: 5em auto;
+  background: white;
+}
+
+#shapeB {
+  width: 20em;
+  height: 20em;
+  border-radius: 1em 0 0 0;
+  background-color: pink;
+  transform: matrix(1, .99, .99, 1, 0, 0);
+}
